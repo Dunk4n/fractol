@@ -6,7 +6,7 @@
 /*   By: niduches <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 15:30:14 by niduches          #+#    #+#             */
-/*   Updated: 2020/08/17 11:08:43 by niduches         ###   ########.fr       */
+/*   Updated: 2020/08/27 13:51:59 by niduches         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,12 @@ void	init_space(t_fspace *space, t_fractal *frac)
 	i = 0;
 	while (i < NB_KEY_PRESSED)
 		frac->key[i++] = false;
-	frac->display_mode = false;
+	i = 0;
+	while (i < NB_THREAD)
+		frac->threads[i++].created = false;
+	frac->sem_work = SEM_FAILED;
+	frac->sem_end = SEM_FAILED;
+	frac->space.display_mode = false;
 	space->size = 2;
 	space->speed = 10;
 	space->center.x = 0;
@@ -28,18 +33,21 @@ void	init_space(t_fspace *space, t_fractal *frac)
 	space->pos.y = 0;
 	space->interpolat.x = 0;
 	space->interpolat.y = 0;
-	space->precision = 100;
+	space->precision = START_PRECISION;
 	space->param_r = 0;
 	space->param_i = 0;
+	get_color(frac);
 }
 
 bool	init_fractal(t_fractal *frac, void *mlx_ptr)
 {
 	frac->mlx_ptr = mlx_ptr;
 	init_space(&frac->space, frac);
+	frac->end = false;
+	frac->mutex_init = false;
+	if (!init_thread(frac))
+		return (false);
 	frac->idx_fractal = 0;
-	frac->win_ptr = NULL;
-	frac->img.img = NULL;
 	frac->width = 600;
 	frac->height = 600;
 	if (!(frac->win_ptr =
@@ -68,11 +76,13 @@ bool	init(t_fractal *frac, uint nb)
 	{
 		frac[i].win_ptr = NULL;
 		frac[i].img.img = NULL;
+		frac[i].init = false;
 		++i;
 	}
 	i = 0;
 	while (i < nb)
 	{
+		frac[i].init = true;
 		if (!init_fractal(&frac[i], mlx_ptr))
 		{
 			free_all(frac);
@@ -95,6 +105,8 @@ void	free_fractal(t_fractal *frac)
 		mlx_destroy_image(frac->mlx_ptr, frac->img.img);
 		frac->img.img = NULL;
 	}
+	free_fractal_thread(frac);
+	frac->init = false;
 }
 
 void	free_all(t_fractal *frac)
@@ -104,7 +116,8 @@ void	free_all(t_fractal *frac)
 	i = 0;
 	while (i < WINDOWS_MAX)
 	{
-		free_fractal(&frac[i]);
+		if (frac[i].init)
+			free_fractal(&frac[i]);
 		++i;
 	}
 }

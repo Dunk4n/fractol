@@ -6,7 +6,7 @@
 /*   By: niduches <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/14 18:22:26 by niduches          #+#    #+#             */
-/*   Updated: 2020/08/17 10:00:33 by niduches         ###   ########.fr       */
+/*   Updated: 2020/08/27 14:09:34 by niduches         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,25 @@ static double	next_step(double *res, double *resi)
 	return ((*res - old) * (*res - old) + (*resi - oldi) * (*resi - oldi));
 }
 
-bool			newton(t_fspace *space, double x, double y, double *color)
+static int		color_newton(t_fspace *space, uint nb, bool find)
+{
+	double	idx;
+	t_color	col;
+
+	if (!space->display_mode && find)
+		return (0);
+	idx = nb;
+	col.argb[R] = (uint)(sin(space->color_r_first * idx +
+(double)space->color_r_second) * 230.0 + 25.0);
+	col.argb[G] = (uint)(sin(space->color_g_first * idx +
+(double)space->color_g_second) * 230.0 + 25.0);
+	col.argb[B] = (uint)(sin(space->color_b_first * idx +
+(double)space->color_b_second) * 230.0 + 25.0);
+	col.argb[A] = 255;
+	return (col.color);
+}
+
+int				newton(t_fspace *space, double x, double y)
 {
 	double	res;
 	double	resi;
@@ -38,13 +56,8 @@ bool			newton(t_fspace *space, double x, double y, double *color)
 	while (i < space->precision)
 	{
 		if (next_step(&res, &resi) <= 0.000001)
-		{
-			++i;
-			*color = i + 1 - (log(2) / sqrt(res * res + resi * resi)) / log(2);
-			return (false);
-		}
+			return (color_newton(space, i, false));
 		++i;
 	}
-	*color = i + 1 - (log(2) / sqrt(res * res + resi * resi)) / log(2);
-	return (true);
+	return (color_newton(space, i, true));
 }

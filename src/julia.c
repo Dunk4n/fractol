@@ -6,71 +6,35 @@
 /*   By: niduches <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/14 17:48:38 by niduches          #+#    #+#             */
-/*   Updated: 2020/08/17 10:00:25 by niduches         ###   ########.fr       */
+/*   Updated: 2020/08/27 14:09:22 by niduches         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractal.h"
 
-static void	next_step(double *res, double *resi,
-double x, double y)
+static int	color_julia(t_fspace *space, uint nb, bool find)
 {
+	double	idx;
+	t_color	col;
+
+	if (!space->display_mode && find)
+		return (0);
+	idx = nb;
+	col.argb[R] = (uint)(sin(space->color_r_first * idx +
+(double)space->color_r_second) * 230.0 + 25.0);
+	col.argb[G] = (uint)(sin(space->color_g_first * idx +
+(double)space->color_g_second) * 230.0 + 25.0);
+	col.argb[B] = (uint)(sin(space->color_b_first * idx +
+(double)space->color_b_second) * 230.0 + 25.0);
+	col.argb[A] = 255;
+	return (col.color);
+}
+
+int			julia(t_fspace *space, double x, double y)
+{
+	double	res;
+	double	resi;
 	double	tmp;
-	double	tmpi;
-
-	tmp = *res;
-	tmpi = *resi;
-	*res = (tmp * tmp) - (tmpi * tmpi) + x;
-	*resi = 2 * (tmp * tmpi) + y;
-}
-
-bool		mandelbrot(t_fspace *space, double x, double y, double *color)
-{
-	double	res;
-	double	resi;
-//	double	tres;
-//	double	tresi;
-//	double	lres;
-//	double	lresi;
-	uint	i;
-
-	i = 0;
-	resi = 0;
-	res = 0;
-//	tresi = 0;
-//	tres = 0;
-//	lresi = 0;
-//	lres = 0;
-	while (i < space->precision)
-	{
-		next_step(&res, &resi, x, y);
-//		if (i > 1 && ((res - tres < 0.05 && res - tres > -0.05 &&
-//resi - tresi < 0.05 && resi - tresi > -0.05) ||
-//(res - lres < 0.01 && res - lres > -0.01 &&
-//resi - lresi < 0.01 && resi - lresi > -0.01 && i > 50)))
-//			return (true);
-//		tres = res;
-//		tresi = resi;
-//		if (i == 0 || res < tres || resi < tresi)
-//		{
-//			lres = res;
-//			lresi = resi;
-//		}
-		++i;
-		if (res * res + resi * resi >= 4)
-		{
-			*color = (double)i + 1.0 - (log(2) / sqrt(res * res + resi * resi)) / log(2);
-			return (false);
-		}
-	}
-	*color = (double)i + 1.0 - (log(2) / sqrt(res * res + resi * resi)) / log(2);
-	return (true);
-}
-
-bool		julia(t_fspace *space, double x, double y, double *color)
-{
-	double	res;
-	double	resi;
 	uint	i;
 
 	i = 0;
@@ -78,14 +42,12 @@ bool		julia(t_fspace *space, double x, double y, double *color)
 	res = x;
 	while (i < space->precision)
 	{
-		next_step(&res, &resi, space->param_r, space->param_i);
+		tmp = res * res - resi * resi + space->param_r;
+		resi = 2 * res * resi + space->param_i;
+		res = tmp;
 		++i;
 		if (res * res + resi * resi >= 4)
-		{
-			*color = (double)i + 1. - (log(2) / sqrt(res * res + resi * resi)) / log(2);
-			return (false);
-		}
+			return (color_julia(space, i, false));
 	}
-	*color = (double)i + 1.0 - (log(2) / sqrt(res * res + resi * resi)) / log(2);
-	return (true);
+	return (color_julia(space, i, true));
 }

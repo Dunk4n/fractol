@@ -6,14 +6,16 @@
 /*   By: niduches <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 15:09:12 by niduches          #+#    #+#             */
-/*   Updated: 2020/08/17 12:04:28 by niduches         ###   ########.fr       */
+/*   Updated: 2020/08/30 22:01:13 by niduches         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <time.h>
 #include "fractal.h"
+#include <X11/Xlib.h>
 
-bool	(* const g_fractal[NB_FRACTAL])
-(t_fspace *space, double x, double y, double *color) =
+int			(*const g_fractal[NB_FRACTAL])
+(t_fspace *space, double x, double y) =
 {
 	mandelbrot, julia, ship, newton,
 };
@@ -23,13 +25,13 @@ const char	*g_fractal_name[NB_FRACTAL] =
 	"mandelbrot", "julia", "ship", "newton",
 };
 
-int		quit_fractal(t_fractal *fractal)
+int			quit_fractal(t_fractal *fractal)
 {
 	free_fractal(fractal);
 	return (0);
 }
 
-void	display_msg(t_fractal *fractal)
+static void	display_msg(t_fractal *fractal)
 {
 	uint	i;
 
@@ -44,7 +46,7 @@ void	display_msg(t_fractal *fractal)
 	exit(0);
 }
 
-void	set_idx_fractals(uint ac, char **av, t_fractal *frac)
+void		set_idx_fractals(uint ac, char **av, t_fractal *frac)
 {
 	uint	i;
 	uint	j;
@@ -68,12 +70,36 @@ void	set_idx_fractals(uint ac, char **av, t_fractal *frac)
 	}
 }
 
-int		main(int ac, char **av)
+/*
+**	TODO check event DestroyNotify on mac maybe not work
+*/
+
+static void	init_event(t_fractal *frac, uint nb)
+{
+	uint		i;
+
+	i = 0;
+	while (i < nb)
+	{
+		mlx_hook(frac[i].win_ptr, DestroyNotify, StructureNotifyMask,
+		quit_fractal, (void*)(&frac[i]));
+		mlx_hook(frac[i].win_ptr, KeyPress, KeyPressMask,
+		key_press, (void*)(&frac[i]));
+		mlx_hook(frac[i].win_ptr, KeyRelease, KeyReleaseMask,
+		key_released, (void*)(&frac[i]));
+		mlx_hook(frac[i].win_ptr, MotionNotify, PointerMotionMask,
+		mouse_event, (void*)(&frac[i]));
+		++i;
+	}
+	mlx_loop_hook(frac->mlx_ptr, display, (void*)(frac));
+}
+
+int			main(int ac, char **av)
 {
 	t_fractal	frac[WINDOWS_MAX];
-	uint		i;
 	uint		nb;
 
+	srand(time(NULL));
 	if (ac - 1 > WINDOWS_MAX)
 		return (0);
 	nb = ac - 1;
@@ -82,16 +108,7 @@ int		main(int ac, char **av)
 	if (nb == 0)
 		display_msg(frac);
 	set_idx_fractals(ac - 1, av + 1, frac);
-	i = 0;
-	while (i < nb)
-	{
-		mlx_hook(frac[i].win_ptr, 17, 0L, quit_fractal, (void*)(&frac[i]));
-		mlx_hook(frac[i].win_ptr, 2, 1L << 0, key_press, (void*)(&frac[i]));
-		mlx_hook(frac[i].win_ptr, 3, 1L << 1, key_released, (void*)(&frac[i]));
-		mlx_hook(frac[i].win_ptr, 6, 0x40L, mouse_event, (void*)(&frac[i]));
-		++i;
-	}
-	mlx_loop_hook(frac->mlx_ptr, display, (void*)(frac));
+	init_event(frac, nb);
 	mlx_loop(frac->mlx_ptr);
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: niduches <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/19 16:00:17 by niduches          #+#    #+#              #
-#    Updated: 2020/08/14 18:23:11 by niduches         ###   ########.fr        #
+#    Updated: 2020/08/30 21:59:57 by niduches         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,9 +24,15 @@ BUILD_DIR	=	build
 
 SRC_PATH	=	main.c					\
 				init.c					\
+				init_thread.c			\
 				fractal.c				\
 				display.c				\
 				event.c					\
+				exec_event.c			\
+				color.c					\
+				thread.c				\
+				complex.c				\
+				mandelbrot.c			\
 				julia.c					\
 				burning_ship.c			\
 				newton.c				\
@@ -39,7 +45,7 @@ OBJ			=	$(SRC:%.c=$(BUILD_DIR)/%.o)
 
 CFLAGS	=	-I$(D_INC) -O3 -Wall -Wextra #-Werror
 
-LDFLAGS	=	-L$(D_LIB) -lm -lft -lmlx -lX11 -lXext
+LDFLAGS	=	-L$(D_LIB) -lm -lft -lmlx -lX11 -lXext -pthread
 
 all:	$(NAME)
 
