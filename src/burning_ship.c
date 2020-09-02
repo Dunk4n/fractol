@@ -6,7 +6,7 @@
 /*   By: niduches <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/14 18:09:08 by niduches          #+#    #+#             */
-/*   Updated: 2020/08/27 14:09:56 by niduches         ###   ########.fr       */
+/*   Updated: 2020/09/02 14:33:48 by niduches         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ static int	color_ship(t_fspace *space, uint nb, bool find)
 	col.argb[A] = 255;
 	return (col.color);
 }
-
 
 int			ship(t_fspace *space, double x, double y)
 {

@@ -6,7 +6,7 @@
 /*   By: niduches <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/23 10:26:18 by niduches          #+#    #+#             */
-/*   Updated: 2020/08/27 14:09:13 by niduches         ###   ########.fr       */
+/*   Updated: 2020/09/02 14:35:02 by niduches         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,6 @@ static void	mandelbrot_set_opti(t_fractal_calc *calc, uint i)
 	}
 }
 
-static void	mandelbrot_init_opti(t_fractal_calc *calc)
-{
-	calc->resi = 0;
-	calc->res = 0;
-	calc->tmp = 0;
-	calc->tmpi = 0;
-	calc->tresi = 0;
-	calc->tres = 0;
-	calc->lresi = 0;
-	calc->lres = 0;
-}
-
 static int	color_mandelbrot(t_fspace *space, uint nb, bool find)
 {
 	double	idx;
@@ -77,7 +65,14 @@ int			mandelbrot(t_fspace *space, double x, double y)
 	uint			i;
 
 	i = 0;
-	mandelbrot_init_opti(&calc);
+	calc.resi = 0;
+	calc.res = 0;
+	calc.tmp = 0;
+	calc.tmpi = 0;
+	calc.tresi = 0;
+	calc.tres = 0;
+	calc.lresi = 0;
+	calc.lres = 0;
 	while (i < space->precision)
 	{
 		next_step(&calc, x, y);

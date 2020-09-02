@@ -6,7 +6,7 @@
 /*   By: niduches <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/23 11:12:17 by niduches          #+#    #+#             */
-/*   Updated: 2020/08/27 14:51:08 by niduches         ###   ########.fr       */
+/*   Updated: 2020/09/02 14:32:33 by niduches         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 static void	exec_event_move(t_fractal *frac)
 {
-	if (frac->key[P_W]/* && frac->space.center.y < 2.0*/)
+	if (frac->key[P_W] && frac->space.center.y < 2.0)
 		frac->space.center.y -= frac->space.interpolat.y * frac->space.speed;
-	if (frac->key[P_S]/* && frac->space.center.y > -2.0*/)
+	if (frac->key[P_S] && frac->space.center.y > -2.0)
 		frac->space.center.y += frac->space.interpolat.y * frac->space.speed;
-	if (frac->key[P_D]/* && frac->space.center.x < 2.0*/)
+	if (frac->key[P_D] && frac->space.center.x < 2.0)
 		frac->space.center.x += frac->space.interpolat.x * frac->space.speed;
-	if (frac->key[P_A]/* && frac->space.center.x > -2.0*/)
+	if (frac->key[P_A] && frac->space.center.x > -2.0)
 		frac->space.center.x -= frac->space.interpolat.x * frac->space.speed;
 }
 
