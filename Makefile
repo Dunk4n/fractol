@@ -6,7 +6,7 @@
 #    By: niduches <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/19 16:00:17 by niduches          #+#    #+#              #
-#    Updated: 2020/08/30 21:59:57 by niduches         ###   ########.fr        #
+#    Updated: 2020/11/04 12:34:43 by niduches         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,11 +39,11 @@ SRC_PATH	=	main.c					\
 
 SRC = $(addprefix $(D_SRC),$(SRC_PATH))
 
-NAME	=	a.out
+NAME	=	fractol
 
 OBJ			=	$(SRC:%.c=$(BUILD_DIR)/%.o)
 
-CFLAGS	=	-I$(D_INC) -O3 -Wall -Wextra #-Werror
+CFLAGS	=	-I$(D_INC) -O3 -Wall -Wextra#-Werror
 
 LDFLAGS	=	-L$(D_LIB) -lm -lft -lmlx -lX11 -lXext -pthread
 

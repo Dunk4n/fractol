@@ -6,7 +6,7 @@
 /*   By: niduches <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 15:27:56 by niduches          #+#    #+#             */
-/*   Updated: 2020/08/30 21:59:45 by niduches         ###   ########.fr       */
+/*   Updated: 2020/11/04 13:03:41 by niduches         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define WINDOWS_MAX	2
 # define NB_THREAD	1
 # define NB_LINE_WORK 1
-# define START_PRECISION 10
+# define START_PRECISION 100
 
 enum			e_union_argb
 {
@@ -35,7 +35,7 @@ enum			e_union_argb
 
 enum			e_fractal
 {
-	MANDEL, JULIA, SHIP, NEWTON, NB_FRACTAL
+	MANDEL, JULIA, SHIP, NEWTON, JULIA4, JULIA1, NB_FRACTAL
 };
 
 typedef union	u_color
@@ -145,17 +145,17 @@ void			free_fractal_thread(t_fractal *frac);
 t_vec2f			c_add(t_vec2f a, t_vec2f b);
 t_vec2f			c_sub(t_vec2f a, t_vec2f b);
 t_vec2f			c_mult(t_vec2f a, t_vec2f b);
+int				mouse_weel(int button, int x, int y, t_fractal *frac);
 
 /*
 **	fractal
 */
 
 int				julia(t_fspace *space, double x, double y);
+int				julia4(t_fspace *space, double x, double y);
+int				julia1(t_fspace *space, double x, double y);
 int				mandelbrot(t_fspace *space, double x, double y);
 int				ship(t_fspace *space, double x, double y);
 int				newton(t_fspace *space, double x, double y);
-
-int				(*const g_fractal[NB_FRACTAL])
-(t_fspace *space, double x, double y);
 
 #endif

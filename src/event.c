@@ -6,10 +6,11 @@
 /*   By: niduches <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/14 14:42:28 by niduches          #+#    #+#             */
-/*   Updated: 2020/08/27 13:51:41 by niduches         ###   ########.fr       */
+/*   Updated: 2020/11/04 13:05:19 by niduches         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <X11/Xlib.h>
 #include "fractal.h"
 
 static void	key_released_value(int key, t_fractal *frac)
@@ -70,6 +71,34 @@ int			key_press(int key, t_fractal *frac)
 		frac->key[P_RIGHT] = true;
 	if (key == K_LEFT)
 		frac->key[P_LEFT] = true;
+	return (0);
+}
+
+int			mouse_weel(int button, int x, int y, t_fractal *frac)
+{
+	if (Button4 == button)
+	{
+		if (frac->space.center.x < 2.0 && frac->space.center.x > -2.0)
+			frac->space.center.x += frac->space.interpolat.x *
+			(x - frac->width / 2) * 0.1;
+		if (frac->space.center.y < 2.0 && frac->space.center.y > -2.0)
+			frac->space.center.y += frac->space.interpolat.y *
+			(y - frac->height / 2) * 0.1;
+		frac->space.size = (frac->space.size - 0.1 *
+		frac->space.size <= 0) ? 0 : frac->space.size - 0.1 * frac->space.size;
+	}
+	if (Button5 != button)
+		return (0);
+	if (frac->space.center.x < 2.0 && frac->space.center.x > -2.0)
+		frac->space.center.x -= frac->space.interpolat.x *
+		(x - frac->width / 2) * 0.1;
+	if (frac->space.center.y < 2.0 && frac->space.center.y > -2.0)
+		frac->space.center.y -= frac->space.interpolat.y *
+		(y - frac->height / 2) * 0.1;
+	if (frac->space.size + 0.1 * frac->space.size >= 4)
+		frac->space.size = 4;
+	else
+		frac->space.size += 0.1 * frac->space.size;
 	return (0);
 }
 

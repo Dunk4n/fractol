@@ -6,24 +6,13 @@
 /*   By: niduches <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 15:09:12 by niduches          #+#    #+#             */
-/*   Updated: 2020/08/30 22:01:13 by niduches         ###   ########.fr       */
+/*   Updated: 2020/11/04 13:16:15 by niduches         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <time.h>
-#include "fractal.h"
 #include <X11/Xlib.h>
-
-int			(*const g_fractal[NB_FRACTAL])
-(t_fspace *space, double x, double y) =
-{
-	mandelbrot, julia, ship, newton,
-};
-
-const char	*g_fractal_name[NB_FRACTAL] =
-{
-	"mandelbrot", "julia", "ship", "newton",
-};
+#include "fractal.h"
 
 int			quit_fractal(t_fractal *fractal)
 {
@@ -34,11 +23,18 @@ int			quit_fractal(t_fractal *fractal)
 static void	display_msg(t_fractal *fractal)
 {
 	uint	i;
+	char	*fractal_name[NB_FRACTAL];
 
+	fractal_name[MANDEL] = "mandelbrot";
+	fractal_name[JULIA] = "julia";
+	fractal_name[SHIP] = "ship";
+	fractal_name[NEWTON] = "newton";
+	fractal_name[JULIA4] = "julia4";
+	fractal_name[JULIA1] = "julia1";
 	i = 0;
 	while (i < NB_FRACTAL)
 	{
-		ft_putstr_fd((char*)g_fractal_name[i], 1);
+		ft_putstr_fd(fractal_name[i], 1);
 		ft_putchar_fd('\n', 1);
 		++i;
 	}
@@ -50,29 +46,30 @@ void		set_idx_fractals(uint ac, char **av, t_fractal *frac)
 {
 	uint	i;
 	uint	j;
+	char	*fractal_name[NB_FRACTAL];
 
+	fractal_name[MANDEL] = "mandelbrot";
+	fractal_name[JULIA] = "julia";
+	fractal_name[SHIP] = "ship";
+	fractal_name[NEWTON] = "newton";
+	fractal_name[JULIA4] = "julia4";
+	fractal_name[JULIA1] = "julia1";
 	i = 0;
-	while (i < ac)
+	while (i++ < ac)
 	{
 		j = 0;
 		while (j < NB_FRACTAL)
 		{
-			if (!ft_strcmp(av[i], g_fractal_name[j]))
+			if (!ft_strcmp(av[i - 1], fractal_name[j]))
 			{
-				frac[i].idx_fractal = j;
+				frac[i - 1].idx_fractal = j;
 				break ;
 			}
-			++j;
-			if (j >= NB_FRACTAL)
+			if (++j >= NB_FRACTAL)
 				display_msg(frac);
 		}
-		++i;
 	}
 }
-
-/*
-**	TODO check event DestroyNotify on mac maybe not work
-*/
 
 static void	init_event(t_fractal *frac, uint nb)
 {
@@ -89,6 +86,8 @@ static void	init_event(t_fractal *frac, uint nb)
 		key_released, (void*)(&frac[i]));
 		mlx_hook(frac[i].win_ptr, MotionNotify, PointerMotionMask,
 		mouse_event, (void*)(&frac[i]));
+		mlx_hook(frac[i].win_ptr, ButtonPress, ButtonPressMask,
+		mouse_weel, (void*)(&frac[i]));
 		++i;
 	}
 	mlx_loop_hook(frac->mlx_ptr, display, (void*)(frac));
