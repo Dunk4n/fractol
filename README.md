@@ -37,3 +37,4 @@ make
 ![mandelbrot](https://github.com/Dunk4n/fractol/blob/master/img/mandelbrot.png)
 ![julia](https://github.com/Dunk4n/fractol/blob/master/img/julia.png)
 ![newton](https://github.com/Dunk4n/fractol/blob/master/img/newton.png)
+![fractal](https://github.com/Dunk4n/fractol/blob/master/img/fractal.gif)
