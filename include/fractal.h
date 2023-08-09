@@ -6,7 +6,7 @@
 /*   By: niduches <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/11 15:27:56 by niduches          #+#    #+#             */
-/*   Updated: 2020/11/07 15:03:18 by niduches         ###   ########.fr       */
+/*   Updated: 2020/11/12 20:53:47 by niduches         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include "keys.h"
 
 # define WINDOWS_MAX	3
-# define NB_THREAD	1
+# define NB_THREAD	10
 # define NB_LINE_WORK 1
 # define START_PRECISION 100
 
